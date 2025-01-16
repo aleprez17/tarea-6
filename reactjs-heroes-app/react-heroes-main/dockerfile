@@ -1,0 +1,13 @@
+# Etapa 1: Construcción de la aplicación React
+FROM node:23.4-alpine AS build
+WORKDIR /REACTJS-HEROES-APP/react-heroes-main
+COPY package.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+# Etapa 2: Configuración de Nginx con la aplicación construida
+FROM nginx:alpine AS configuracion
+COPY --from=build /REACTJS-HEROES-APP/react-heroes-main/nginx.conf /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
